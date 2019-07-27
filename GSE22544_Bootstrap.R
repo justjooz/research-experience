@@ -8,16 +8,11 @@ setwd("D:/Code/RE/My R scripts")
 # Reading GSE22544 dataframe into script
 
 new_df_GSE22544 <- read.csv("new_df_GSE22544.csv", header = T, sep = ",", stringsAsFactors = F, row.names = 1) # read exprs dataframe
-# rownames(new_df_GSE22544) <- new_df_GSE22544$X #change gene symbols into rownames
-# new_df_GSE22544 <- new_df_GSE22544[,-1] # removal of 1st column
-# is.matrix(new_df_GSE22544)
 new_df_GSE22544 <- cbind(new_df_GSE22544[, c(4,8,9,13)], new_df_GSE22544[,-c(4,8,9,13)]) # rearranges the normal classes to the first 4 columns
-
 new_df_GSE22544 <- na.omit(new_df_GSE22544) # removes NAs which causes probs with for loop
 
-
+# (2) Method 1: using for loops to produce binary matrix (but leads to error that says "data are essentially constant")
 # ===========================================================================================================
-# Method (1): using for loops to produce binary matrix (but leads to error that says "data are essentially constant")
 
 significantgenes <- c() # to initialise the vector
 boot_list <- list()
@@ -45,10 +40,8 @@ pb <- progress_bar$new(total = 1000)
       Sys.sleep(1 / 1000)
     }
 
+# (2) Method 2: Using "genefilter" package's "rowttests" function (runs faster than nested loop & w/o error)
 # =================================================================================================
-
-# =================================================================================================
-# Method (2): Using "genefilter" package's "rowttests" function (runs faster than nested loop & w/o error)
 
 # -------- Prep ----------------
 #BiocManager::install("genefilter")
@@ -73,36 +66,31 @@ for (i in 1:1000){
   pb$tick() # for progress bar
   Sys.sleep(1 / 1000) # for progress bar
 }
-# -------
-# ==================================================================================================
+# -------rowttests function to generate binary matrix -----------
 
-
+# (3) Convert list into matrix
 # ==================================================================================================
-# Convert list into matrix
 boot_mat_2 <- matrix(unlist(boot_list_2), ncol = 1000, byrow = FALSE) # converting list into matrix
 # dim(boot_mat_2)
 
-# computing rowsums
-
+# (4) Computing rowsums of each gene to see significance out of 1000
+# ===========================================================================
 sum_vect <- rowSums(boot_mat_2)
 tail(sort(sum_vect), 5) # [1] 572 590 590 849 906
-
-?hist
 
 library(progress)
 pb <- progress_bar$new(total = length(sum_vect))
 
-for (i in sum_vect){
+# for loop that will generate binary vector to be used as observations for confusion matrix
+for (i in sum_vect){ 
   sum_sig <- as.numeric(x>180)
   
   pb$tick() # for progress bar
   Sys.sleep(1 / length(sum_vect)) # for progress bar
 }
 
-
+# (5) Creating confusion matrix
 # =======================================================
-# Creating confusion matrix
-
 first_sample <- as.factor(boot_mat_2[,1]) # actual
 sum_sig <- as.factor(sum_sig) # observation
 
@@ -138,13 +126,12 @@ confusionMatrix(sum_sig, first_sample)
             # 'Positive' Class : 0               
 
 str(conf_mat) # $table contains confusion matrix
-as.data.frame(as.matrix((confusionMatrix(sum_sig, first_sample))$table))
 (confusionMatrix(sum_sig, first_sample))$table
 conf_mat <- (confusionMatrix(sum_sig, first_sample))$table
 ?confusionMatrix
 
+# (6) Calculating metrics: Precision, Recall, F-Score
 # ========================================================================
-# Calculating metrics: Precision, Recall, F-Score
 
 # Precision: TP/(TP+FP):
 precision <- conf_mat[1,1]/sum(conf_mat[1,1:2])
@@ -158,14 +145,13 @@ recall # [1] 0.9429527
 f_score <- 2 * precision * recall / (precision + recall)
 # [1] 0.9540169
 
+# Metrics
 # Precision: 0.9653439
 # Recall: 0.9429527
 # F-score: 0.9540169
 
-
+# (7) Create user-defined function that calculates jaccard coefficient (intersection over union)
 # =========================================================================
-
-# Create user-defined function that calculates jaccard coefficient (intersection over union)
 jaccard_fun <- function (x,y) {   
   M.11 = sum(x == 1 & y == 1)
   M.10 = sum(x == 1 & y == 0)
@@ -181,16 +167,17 @@ rownames(jaccard_df) <- paste0('S', 1:1000)
 library(progress)
 pb <- progress_bar$new(total = 1000)
 
+# for loop that will produce the distance heatmap/
 for (r in 1:1000) {
   for (c in 1:1000) {
-    if (c == r) { # if rows is the same as columns, assign as 1
-      jaccard_df[r,c] = 1
+    if (c == r) { # if rows iteration is the same as column iteration,
+      jaccard_df[r,c] = 1 # assign as 1
     } else if (c > r) { # if not then when columns is more than rows, add the variables of rows and
       jaccard_df[r,c] <- jaccard_fun(boot_mat_2[,r], boot_mat_2[,c]) # replace with list from above
     }
   }
-  pb$tick()
-  Sys.sleep(1 / 1000)
+  pb$tick() # for progress bar
+  Sys.sleep(1 / 1000) # for progres bar
 }
 
 write.csv(boot_mat_2, file = "D:/Code/RE/My R scripts/boot_mat_2.csv", row.names = T)
