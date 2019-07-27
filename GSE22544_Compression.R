@@ -1,0 +1,55 @@
+# This R script uses a uniqued gene symbol vector to loop through a expression dataframe to subset and sort out gene symbols in a list
+# (cont) this list is then changed in a dataframe/matrix, meaned, and eventually contains indiv gene symbols on the rownames and sample names
+# on colnames. Contains meaned expression data
+
+setwd("D:/Code/RE/My R scripts")
+
+# (1) Loading up the cbind dataset and gene symbol vector
+# ----------------------------------------------------------
+
+bound_GSE22544 <- read.csv("bound_GSE22544.csv", header = T, sep = ",", stringsAsFactors = FALSE)
+bound_GSE22544 <- bound_GSE22544[,-1] # removes 1st column of numbers
+bound_GSE22544 <- bound_GSE22544[!(is.na(bound_GSE22544$Gene.Symbol) | bound_GSE22544$Gene.Symbol==""), ] # removes columns that have NAs or empty values
+
+gene_symbol_GSE22544 <- read.csv("gene_symbol_GSE22544.csv", header = T, sep = ",", stringsAsFactors = FALSE)
+gene_symbol_GSE22544 <- gene_symbol_GSE22544[,2] # chooses only the second column
+gene_symbol_GSE22544 <- na.omit(gene_symbol_GSE22544) # removes rows that have NAs
+# View(gene_symbol_GSE22544) # 16,072 entries
+
+# (2) Using unique() function to remove duplicate genes
+# --------------------------------------------------------
+uniq_genesymbol <- unique(gene_symbol_GSE22544) #16,972 entries before unique function
+# View(uniq_genesymbol)# 9,995 entries after unique function
+
+# (3) Making an Empty List
+# -----------------------------
+mat_list <- list()
+
+# (4) Using a 'for' loop to loop through bound_GSE22544 using a gene symbol vector
+# ----------------------------------------------------------------------------------
+for (i in uniq_genesymbol){
+  df_subset <- subset(bound_GSE22544, Gene.Symbol == i, select = -c(1))
+  mat_subset <- as.matrix(df_subset)
+  mat_list[[i]] <- mat_subset
+}
+
+# (5) Writing a function to find the mean for each sublist
+# ------------------------------------------------------------
+mean_fun <- function(x){
+  mean_value <- colMeans(x)
+  return(mean_value)
+}
+
+# (6) Using lapply on the list of gene symbols and exprs data using the function i created (mean_fun)
+# --------------------------------------------------------------------------------------------------------
+mean_list <- lapply(mat_list, mean_fun)
+# View(mean_list)
+
+# (7) Exprs data compressed into mean exprs data
+# ----------------------------------------------------
+# new_GSE22544 <- matrix(unlist(mean_list), ncol = 19, byrow = TRUE) # rejected cos no row and column names; only mean exprs data
+# new_GSE22544 <- data.frame(matrix(unlist(mean_list), ncol = 19, byrow = TRUE)) # rejected cos no column and row names retained and needs extra steps to take the colnames from bound_22544 df
+new_df_GSE22544 <- data.frame(t(sapply(mean_list,c))) # has gene symbols as rownames and sample numbers as column names
+# is.data.frame(new_df_GSE22544) 
+# dim(new_df_GSE22544)
+write.csv(new_df_GSE22544, file = "D:/Code/RE/My R scripts/new_df_GSE22544.csv", row.names = T)
