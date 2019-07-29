@@ -50,7 +50,7 @@ mean_fun <- function(x){
 mean_list <- lapply(mat_list, mean_fun)
 # View(mean_list)
 ```
-## (7) Exprs data compressed into mean exprs data
+## (7) Unlisting of the list, transposing and converting into a data frame
 ```{r, eval=FALSE}
 # new_GSE22544 <- matrix(unlist(mean_list), ncol = 19, byrow = TRUE) # rejected cos no row and column names; only mean exprs data
 # new_GSE22544 <- data.frame(matrix(unlist(mean_list), ncol = 19, byrow = TRUE)) # rejected cos no column and row names retained and needs extra steps to take the colnames from bound_22544 df
