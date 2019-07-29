@@ -2,6 +2,7 @@
 # followed by using a distance matrix/heat map 
 # and confusion matrix to obtain the F-score, recall, precision
 
+# Set working directory
 setwd("D:/Code/RE/My R scripts")
 
 # ==========================================================================================================
