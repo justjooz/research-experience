@@ -1,5 +1,5 @@
 ---
-title: "GSE22544 Compression"
+title: "GSE22544 Compression Procedure"
 output: html_document
 ---
 This R script uses a uniqued gene symbol vector to loop through a expression dataframe to subset and sort out gene symbols in a list. This list is then changed in a dataframe/matrix, meaned, and eventually contains indiv gene symbols on the rownames and sample names on colnames. Contains meaned expression data.
