@@ -46,7 +46,7 @@ Nested for loop to obtain binary vectors of significant genes by resampling 1000
       boot_normal <- sample(new_df_GSE22544[, 1:4], size=4, replace=TRUE)
       boot_IDC <- sample(new_df_GSE22544[,5:20], size=4, replace=TRUE)
       
-     for(i in 1:2000){ # 9994 is the number of genes # if set to 9995, "data are essentially constant" error
+     for(i in 1:9994){ # 9994 is the number of genes # if set to 9995, "data are essentially constant" error
       ttest_1  <- try(t.test(boot_normal[i,], boot_IDC[i,]))
       if (ttest_1$p.value <= 0.05) # if p value is <= 0.05(less than or equals),
       {
