@@ -77,18 +77,12 @@ boot_mat_2 <- matrix(unlist(boot_list_2), ncol = 1000, byrow = FALSE) # converti
 # (4) Computing rowsums of each gene to see significance out of 1000
 # ===========================================================================
 sum_vect <- rowSums(boot_mat_2)
-tail(sort(sum_vect), 5) # [1] 572 590 590 849 906
+tail(sort(sum_vect), 5) 
 
-library(progress)
-pb <- progress_bar$new(total = length(sum_vect))
+hist(sum_vect) # to visually inspect to determine point threshold of significance
 
-# for loop that will generate binary vector to be used as observations for confusion matrix
-for (i in sum_vect){ 
-  sum_sig <- as.numeric(x>180)
-  
-  pb$tick() # for progress bar
-  Sys.sleep(1 / length(sum_vect)) # for progress bar
-}
+# `sum_sig` is assigned the numeric output of the boolean of `i>180`
+sum_sig <- as.numeric(sum_vect>180)
 
 # (5) Creating confusion matrix
 # =======================================================
@@ -126,10 +120,7 @@ confusionMatrix(sum_sig, first_sample)
             # 
             # 'Positive' Class : 0               
 
-str(conf_mat) # $table contains confusion matrix
-(confusionMatrix(sum_sig, first_sample))$table
 conf_mat <- (confusionMatrix(sum_sig, first_sample))$table
-
 
 # (6) Calculating metrics: Precision, Recall, F-Score
 # ========================================================================
@@ -154,7 +145,7 @@ f_score <- 2 * precision * recall / (precision + recall)
 # Visualising the Confusion Matrix
 cm <-confusionMatrix(sum_sig, first_sample)
 
-?confusionMatrix
+# ?confusionMatrix
 draw_confusion_matrix <- function(cm) {
   
   layout(matrix(c(1,1,2)))
@@ -230,8 +221,21 @@ for (r in 1:1000) {
     }
   }
   pb$tick() # for progress bar
-  Sys.sleep(1 / 1000) # for progres bar
+  Sys.sleep(1 / 1000) # for progress bar
 }
+
+# (8) Plot distance matrix using pheatmap package:
+# ======================================================
+
+# Convert jaccard_df into a matrix:
+# install.packages("pheatmap")
+library(pheatmap)
+library(dplyr)
+test_mat <- as.matrix(jaccard_df)
+test_mat[is.na(test_mat)] <- 0
+heatmap <- pheatmap(test_mat)
+
+
 
 write.csv(boot_mat_2, file = "D:/Code/RE/My R scripts/boot_mat_2.csv", row.names = T)
 write.csv(jaccard_df, file = "D:/Code/RE/My R scripts/jaccard_df.csv", row.names = T)
