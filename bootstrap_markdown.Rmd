@@ -7,8 +7,14 @@ output:
     theme: architect
     highlight: github
 ---
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
 *This R script shows the process to obtain significant genes, binarize them,  and doa 1000x bootstrap followed by using a distance matrix/heat map and confusion matrix to obtain the F-score, recall, precision.*
 
+</div>
 ### Setting the Working Directory 
 
 ```{r, eval=FALSE}
@@ -249,8 +255,8 @@ rownames(jaccard_df) <- paste0('S', 1:1000)
 
 ```
 
-For loop that will produce the distance matrix:
-```{r, echo=FALSE, warning=FALSE}
+`for` loop that will produce the distance matrix:
+```{r echo=FALSE, warning=FALSE}
 library(progress)
 pb <- progress_bar$new(total = 1000)
 

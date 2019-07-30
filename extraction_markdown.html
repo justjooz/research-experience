@@ -144,14 +144,19 @@ code span.ot { color: #007020; }
 <div id="content-wrapper">
   <div class="inner clearfix">
     <section id="main-content">
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="dark blue">
 <p><em>This R script demonstrates the extraction of genetic expression data from the GEO database using R. Any data extracted is then assigned to variables for further use.</em></p>
+</div>
 <div id="set-the-working-directory" class="section level3">
 <h3>Set the working directory</h3>
 <p>The working directory is always set at the start of any R script to ensure that RStudio can read the files in the working directory.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;D:/Code/RE/My R scripts&quot;</span>)</a></code></pre></div>
 </div>
-<div id="obtain-geo-gse-data" class="section level2">
-<h2>(1) Obtain GEO GSE data</h2>
+<div id="obtain-gse-series-data-from-geo-database" class="section level2">
+<h2>(1) Obtain GSE series data from GEO database</h2>
 <p>Firstly, the data is extracted from a GEO GSE file using the <code>GEOquery</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(GEOquery) <span class="co"># always use the library() function first in order to use a certain package</span></a>
 <a class="sourceLine" id="cb2-2" title="2">  </a>
