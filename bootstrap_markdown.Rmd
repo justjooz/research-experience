@@ -188,6 +188,7 @@ f_score
 
 Visualisation of the Confusion Matrix:
 ```{r}
+set.seed(1234)
 cm <-confusionMatrix(sum_sig, first_sample)
 
 # ?confusionMatrix

@@ -148,6 +148,7 @@ f_score <- 2 * precision * recall / (precision + recall)
 # F-score: 0.9540169
 
 # Visualising the Confusion Matrix
+set.seed(1234)
 cm <-confusionMatrix(sum_sig, first_sample)
 
 # ?confusionMatrix
