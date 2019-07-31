@@ -224,18 +224,5 @@ for (r in 1:1000) {
   Sys.sleep(1 / 1000) # for progress bar
 }
 
-# (8) Plot distance matrix using pheatmap package:
-# ======================================================
-
-# Convert jaccard_df into a matrix:
-# install.packages("pheatmap")
-library(pheatmap)
-library(dplyr)
-test_mat <- as.matrix(jaccard_df)
-test_mat[is.na(test_mat)] <- 0
-heatmap <- pheatmap(test_mat)
-
-
-
 write.csv(boot_mat_2, file = "D:/Code/RE/My R scripts/boot_mat_2.csv", row.names = T)
 write.csv(jaccard_df, file = "D:/Code/RE/My R scripts/jaccard_df.csv", row.names = T)
