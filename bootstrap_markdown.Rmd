@@ -10,7 +10,7 @@ output:
 <style>
 div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 </style>
-<div class = "blue">
+<div class = "dark blue">
 
 *This R script shows the process to obtain significant genes, binarize them,  and doa 1000x bootstrap followed by using a distance matrix/heat map and confusion matrix to obtain the F-score, recall, precision.*
 
