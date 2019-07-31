@@ -26,7 +26,7 @@ setwd("D:/Code/RE/My R scripts")
 
 Firstly, the data is extracted from a GEO GSE file using the `GEOquery` package:
 
-```{r code for extracting GSE22544 data, eval=FALSE}
+```{r code for extracting GSE22544 data, message=FALSE, eval=FALSE}
 library(GEOquery) # always use the library() function first in order to use a certain package
   
 GSE22544 <- getGEO(filename = 'GSE22544_series_matrix.txt.gz')
@@ -43,12 +43,12 @@ pheno_GSE22544 <- phenoData(GSE22544) # pheno data
 feature_GSE22544 <- fData(GSE22544) # feature data
 ```
 
-### (3) Obtaining expression data from feature data
+### (3) Obtaining expression data from feature data using the `exprs()` function
 ```{r exprs data is extracted from feature data, eval=FALSE}
       exprs_GSE22544 <- exprs(GSE22544) # exprs() function applied to GSE22544
       class(exprs_GSE22544) # shows as matrix
       exprs_GSE22544 <- as.data.frame(exprs_GSE22544) # change matrix to data.frame
-      View(exprs_GSE22544) # GSM on the columns, 'at' on the rows
+      # View(exprs_GSE22544) # GSM on the columns, 'at' on the rows
 ```
 
 ### (4) Subsetting the gene Symbols from feature data

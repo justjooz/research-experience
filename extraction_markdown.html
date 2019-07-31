@@ -155,8 +155,8 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <p>The working directory is always set at the start of any R script to ensure that RStudio can read the files in the working directory.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;D:/Code/RE/My R scripts&quot;</span>)</a></code></pre></div>
 </div>
-<div id="obtain-gse-series-data-from-geo-database" class="section level2">
-<h2>(1) Obtain GSE series data from GEO database</h2>
+<div id="obtain-gse-series-data-from-geo-database" class="section level3">
+<h3>(1) Obtain GSE series data from GEO database</h3>
 <p>Firstly, the data is extracted from a GEO GSE file using the <code>GEOquery</code> package:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(GEOquery) <span class="co"># always use the library() function first in order to use a certain package</span></a>
 <a class="sourceLine" id="cb2-2" title="2">  </a>
@@ -164,35 +164,35 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <a class="sourceLine" id="cb2-4" title="4">GSE22544</a></code></pre></div>
 <p>The code has been commented to prevent the code from running.</p>
 </div>
-<div id="assigning-pheno-data-and-feature-data-into-respective-vectors" class="section level2">
-<h2>(2) Assigning pheno data and feature data into respective vectors</h2>
+<div id="assigning-pheno-data-and-feature-data-into-respective-vectors" class="section level3">
+<h3>(2) Assigning pheno data and feature data into respective vectors</h3>
 <p>Then I assigned pheno data and feature data of the GSE into separate variables as such:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">pheno_GSE22544 &lt;-<span class="st"> </span><span class="kw">phenoData</span>(GSE22544) <span class="co"># pheno data</span></a>
 <a class="sourceLine" id="cb3-2" title="2">feature_GSE22544 &lt;-<span class="st"> </span><span class="kw">fData</span>(GSE22544) <span class="co"># feature data</span></a></code></pre></div>
 </div>
-<div id="obtaining-expression-data-from-feature-data" class="section level2">
-<h2>(3) Obtaining expression data from feature data</h2>
+<div id="obtaining-expression-data-from-feature-data-using-the-exprs-function" class="section level3">
+<h3>(3) Obtaining expression data from feature data using the <code>exprs()</code> function</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">      exprs_GSE22544 &lt;-<span class="st"> </span><span class="kw">exprs</span>(GSE22544) <span class="co"># exprs() function applied to GSE22544</span></a>
 <a class="sourceLine" id="cb4-2" title="2">      <span class="kw">class</span>(exprs_GSE22544) <span class="co"># shows as matrix</span></a>
 <a class="sourceLine" id="cb4-3" title="3">      exprs_GSE22544 &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(exprs_GSE22544) <span class="co"># change matrix to data.frame</span></a>
-<a class="sourceLine" id="cb4-4" title="4">      <span class="kw">View</span>(exprs_GSE22544) <span class="co"># GSM on the columns, &#39;at&#39; on the rows</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-4" title="4">      <span class="co"># View(exprs_GSE22544) # GSM on the columns, &#39;at&#39; on the rows</span></a></code></pre></div>
 </div>
-<div id="subsetting-the-gene-symbols-from-feature-data" class="section level2">
-<h2>(4) Subsetting the gene Symbols from feature data</h2>
+<div id="subsetting-the-gene-symbols-from-feature-data" class="section level3">
+<h3>(4) Subsetting the gene Symbols from feature data</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">      GENE_Symbols &lt;-<span class="st"> </span>(feature_GSE22544 [<span class="dv">11</span>])</a>
 <a class="sourceLine" id="cb5-2" title="2">      <span class="kw">rownames</span>(GENE_Symbols) &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># removes probe IDs as rownames</span></a>
 <a class="sourceLine" id="cb5-3" title="3">      <span class="kw">class</span>(GENE_Symbols)</a></code></pre></div>
 </div>
-<div id="combine-gene_symbols-df-with-expression-df" class="section level2">
-<h2>(5) Combine GENE_Symbols df with expression df</h2>
+<div id="combine-gene_symbols-df-with-expression-df" class="section level3">
+<h3>(5) Combine GENE_Symbols df with expression df</h3>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">      bound_GSE22544 &lt;-<span class="st"> </span><span class="kw">cbind</span>(GENE_Symbols, exprs_GSE22544)</a>
 <a class="sourceLine" id="cb6-2" title="2">      <span class="kw">rownames</span>(bound_GSE22544) &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb6-3" title="3">      </a>
 <a class="sourceLine" id="cb6-4" title="4">      <span class="kw">View</span>(bound_GSE22544)</a>
 <a class="sourceLine" id="cb6-5" title="5">      <span class="kw">ncol</span>(bound_GSE22544)</a></code></pre></div>
 </div>
-<div id="creating-a-class-information-vector-and-factor" class="section level2">
-<h2>(6) Creating a class information vector and factor</h2>
+<div id="creating-a-class-information-vector-and-factor" class="section level3">
+<h3>(6) Creating a class information vector and factor</h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="co"># using gsub to change the class labels</span></a>
 <a class="sourceLine" id="cb7-2" title="2">pheno_GSE22544<span class="op">@</span>data<span class="op">$</span>characteristics_ch1 &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;tissue:&quot;</span>, <span class="st">&quot;&quot;</span>,   pheno_GSE22544<span class="op">@</span>data<span class="op">$</span>characteristics_ch1)</a>
 <a class="sourceLine" id="cb7-3" title="3">pheno_GSE22544<span class="op">@</span>data<span class="op">$</span>characteristics_ch1 &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;breast cancer&quot;</span>, <span class="st">&quot;IDC&quot;</span>, pheno_GSE22544<span class="op">@</span>data<span class="op">$</span>characteristics_ch1)</a>
@@ -213,8 +213,8 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <a class="sourceLine" id="cb7-18" title="18">      <span class="co"># making a vector for insertion into exprs dataframe later in bootstrap step</span></a>
 <a class="sourceLine" id="cb7-19" title="19">      class_vector &lt;-<span class="st"> </span><span class="kw">c</span>(pheno_GSE22544<span class="op">@</span>data<span class="op">$</span>characteristics_ch1)</a></code></pre></div>
 </div>
-<div id="creating-a-gene-symbols-vector" class="section level2">
-<h2>(7) Creating a gene symbols vector</h2>
+<div id="creating-a-gene-symbols-vector" class="section level3">
+<h3>(7) Creating a gene symbols vector</h3>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"> gene_symbol_GSE22544 &lt;-<span class="st"> </span>(feature_GSE22544 [<span class="dv">11</span>])</a>
 <a class="sourceLine" id="cb8-2" title="2">      <span class="kw">rownames</span>(gene_symbol_GSE22544) &lt;-<span class="st"> </span><span class="ot">NULL</span></a>
 <a class="sourceLine" id="cb8-3" title="3">      <span class="co"># View(gene_symbol_GSE22544)</span></a>
@@ -225,8 +225,8 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <a class="sourceLine" id="cb8-8" title="8">      <span class="co"># writing into a csv file</span></a>
 <a class="sourceLine" id="cb8-9" title="9">      <span class="co"># write.csv()</span></a></code></pre></div>
 </div>
-<div id="writing-files" class="section level2">
-<h2>Writing files</h2>
+<div id="writing-files" class="section level3">
+<h3>Writing files</h3>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">write.csv</span>(bound_GSE22544, <span class="dt">file =</span> <span class="st">&quot;D:/Code/RE/My R scripts/bound_GSE22544.csv&quot;</span>) <span class="co"># writes bound df with gene symbol and expression data</span></a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="kw">write.csv</span>(gene_symbol_GSE22544, <span class="dt">file =</span> <span class="st">&quot;D:/Code/RE/My R scripts/gene_symbol_GSE22544.csv&quot;</span>) <span class="co"># writes gene symbol vector</span></a>
 <a class="sourceLine" id="cb9-3" title="3"><span class="kw">write.csv</span>(class_factor, <span class="dt">file =</span> <span class="st">&quot;D:/Code/RE/My R scripts/class_factor.csv&quot;</span>) <span class="co"># writes class labels factor</span></a>
