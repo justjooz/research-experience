@@ -1,4 +1,4 @@
-# this R script shows the process to obtain significant genes, binarize them,  and doa 1000x bootstrap
+# this R script shows the process to obtain significant genes, binarize them, and do a 1000x bootstrap
 # followed by using a distance matrix/heat map 
 # and confusion matrix to obtain the F-score, recall, precision
 
@@ -79,7 +79,12 @@ boot_mat_2 <- matrix(unlist(boot_list_2), ncol = 1000, byrow = FALSE) # converti
 sum_vect <- rowSums(boot_mat_2)
 tail(sort(sum_vect), 5) 
 
-hist(sum_vect) # to visually inspect to determine point threshold of significance
+hist(sum_vect, freq=FALSE, breaks = 200, 
+     main = "Distribution of Significant Samplings in Breast Cancer Genes", 
+     xlab = "Significant Samplings", 
+     col = "orange",
+     xlim=c(0,1000),
+     ylim = c(0, 0.020)) # to visually inspect to determine point threshold of significance
 
 # `sum_sig` is assigned the numeric output of the boolean of `i>180`
 sum_sig <- as.numeric(sum_vect>180)
@@ -129,7 +134,7 @@ conf_mat <- (confusionMatrix(sum_sig, first_sample))$table
 precision <- conf_mat[1,1]/sum(conf_mat[1,1:2])
 precision # [1] 0.9653439
 
-# Recall: TP/(TP + FN):
+# Recall: TP/(TP+FN):
 recall <- conf_mat[1,1]/sum(conf_mat[1:2,1])
 recall # [1] 0.9429527
 

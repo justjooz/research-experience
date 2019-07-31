@@ -130,7 +130,12 @@ tail(sort(sum_vect), 5)
 
 The threshold for significant for genes out of 1000 was chosen to be 180 by physical inspection of `hist(sum_vect)`
 ```{r}
-hist(sum_vect)
+hist(sum_vect, freq=FALSE, breaks = 200, 
+     main = "Distribution of Significant Samplings in Breast Cancer Genes", 
+     xlab = "Significant Samplings", 
+     col = "orange",
+     xlim=c(0,1000),
+     ylim = c(0, 0.020)) # to visually inspect to determine point threshold of significance
 ```
 
 
@@ -256,7 +261,7 @@ rownames(jaccard_df) <- paste0('S', 1:1000)
 ```
 
 `for` loop that will produce the distance matrix:
-```{r echo=FALSE, warning=FALSE}
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
 library(progress)
 pb <- progress_bar$new(total = 1000)
 
