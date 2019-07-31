@@ -154,55 +154,75 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <h3>Set Working Directory</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">setwd</span>(<span class="st">&quot;D:/Code/RE/My R scripts&quot;</span>)</a></code></pre></div>
 </div>
-<div id="loading-up-the-combined-dataset-and-gene-symbol-vector" class="section level2">
-<h2>(1) Loading up the combined dataset and gene symbol vector</h2>
+<div id="loading-up-the-combined-dataset-and-gene-symbol-vector" class="section level3">
+<h3>(1) Loading up the combined dataset and gene symbol vector</h3>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">bound_GSE22544 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;bound_GSE22544.csv&quot;</span>, <span class="dt">header =</span> T, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2">bound_GSE22544 &lt;-<span class="st"> </span>bound_GSE22544[,<span class="op">-</span><span class="dv">1</span>] <span class="co"># removes 1st column of numbers</span></a>
-<a class="sourceLine" id="cb2-3" title="3">bound_GSE22544 &lt;-<span class="st"> </span>bound_GSE22544[<span class="op">!</span>(<span class="kw">is.na</span>(bound_GSE22544<span class="op">$</span>Gene.Symbol) <span class="op">|</span><span class="st"> </span>bound_GSE22544<span class="op">$</span>Gene.Symbol<span class="op">==</span><span class="st">&quot;&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3">bound_GSE22544 &lt;-<span class="st"> </span>bound_GSE22544[<span class="op">!</span>(<span class="kw">is.na</span>(bound_GSE22544<span class="op">$</span>Gene.Symbol) <span class="op">|</span><span class="st"> </span>bound_GSE22544<span class="op">$</span>Gene.Symbol<span class="op">==</span><span class="st">&quot;&quot;</span>), ]</a>
 <a class="sourceLine" id="cb2-4" title="4">                                 </a>
 <a class="sourceLine" id="cb2-5" title="5">gene_symbol_GSE22544 &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;gene_symbol_GSE22544.csv&quot;</span>, <span class="dt">header =</span> T, <span class="dt">sep =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb2-6" title="6">gene_symbol_GSE22544 &lt;-<span class="st"> </span>gene_symbol_GSE22544[,<span class="dv">2</span>] <span class="co"># chooses only the second column</span></a>
 <a class="sourceLine" id="cb2-7" title="7">gene_symbol_GSE22544 &lt;-<span class="st"> </span><span class="kw">na.omit</span>(gene_symbol_GSE22544) <span class="co"># removes rows that have NAs</span></a>
 <a class="sourceLine" id="cb2-8" title="8"><span class="co"># View(gene_symbol_GSE22544) # 16,072 entries</span></a></code></pre></div>
 </div>
-<div id="using-unique-function-to-remove-duplicate-genes" class="section level2">
-<h2>(2) Using <code>unique()</code> function to remove duplicate genes</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">uniq_genesymbol &lt;-<span class="st"> </span><span class="kw">unique</span>(gene_symbol_GSE22544) <span class="co">#16,972 entries before unique function</span></a>
+<div id="using-unique-function-to-remove-duplicate-genes" class="section level3">
+<h3>(2) Using <code>unique()</code> function to remove duplicate genes</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">uniq_genesymbol &lt;-<span class="st"> </span><span class="kw">unique</span>(gene_symbol_GSE22544) <span class="co">#16,072 entries before unique function</span></a>
 <a class="sourceLine" id="cb3-2" title="2"><span class="co"># View(uniq_genesymbol)# 9,995 entries after unique function</span></a></code></pre></div>
 </div>
-<div id="making-an-empty-list" class="section level2">
-<h2>(3) Making an Empty List</h2>
+<div id="making-an-empty-list" class="section level3">
+<h3>(3) Making an Empty List</h3>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">mat_list &lt;-<span class="st"> </span><span class="kw">list</span>()</a></code></pre></div>
 </div>
-<div id="using-a-for-loop-to-loop-through-bound_gse22544-using-a-gene-symbol-vector" class="section level2">
-<h2>(4) Using a <code>for</code> loop to loop through <code>bound_GSE22544</code> using a gene symbol vector</h2>
+<div id="using-a-for-loop-to-loop-through-bound_gse22544-using-a-gene-symbol-vector" class="section level3">
+<h3>(4) Using a <code>for</code> loop to loop through <code>bound_GSE22544</code> using a gene symbol vector</h3>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="cf">for</span> (i <span class="cf">in</span> uniq_genesymbol){</a>
 <a class="sourceLine" id="cb5-2" title="2">  df_subset &lt;-<span class="st"> </span><span class="kw">subset</span>(bound_GSE22544, Gene.Symbol <span class="op">==</span><span class="st"> </span>i, <span class="dt">select =</span> <span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>))</a>
 <a class="sourceLine" id="cb5-3" title="3">  mat_subset &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(df_subset)</a>
 <a class="sourceLine" id="cb5-4" title="4">  mat_list[[i]] &lt;-<span class="st"> </span>mat_subset</a>
 <a class="sourceLine" id="cb5-5" title="5">}</a></code></pre></div>
 </div>
-<div id="writing-a-function-to-find-the-mean-for-each-sublist" class="section level2">
-<h2>(5) Writing a function to find the mean for each sublist</h2>
+<div id="writing-a-function-to-find-the-mean-for-each-sublist" class="section level3">
+<h3>(5) Writing a function to find the mean for each sublist</h3>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">mean_fun &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
 <a class="sourceLine" id="cb6-2" title="2">  mean_value &lt;-<span class="st"> </span><span class="kw">colMeans</span>(x)</a>
 <a class="sourceLine" id="cb6-3" title="3">  <span class="kw">return</span>(mean_value)</a>
 <a class="sourceLine" id="cb6-4" title="4">}</a></code></pre></div>
 </div>
-<div id="using-lapply-on-the-list-of-gene-symbols-and-exprs-data-using-the-function-created-mean_fun" class="section level2">
-<h2>(6) Using <code>lapply</code> on the list of gene symbols and exprs data using the function created: <code>mean_fun</code></h2>
+<div id="using-lapply-on-the-list-of-gene-symbols-and-exprs-data-using-the-function-created-mean_fun" class="section level3">
+<h3>(6) Using <code>lapply</code> on the list of gene symbols and exprs data using the function created: <code>mean_fun</code></h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">mean_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(mat_list, mean_fun)</a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="co"># View(mean_list)</span></a></code></pre></div>
 </div>
-<div id="unlisting-of-the-list-transposing-and-converting-into-a-data-frame" class="section level2">
-<h2>(7) Unlisting of the list, transposing and converting into a data frame</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="co"># new_GSE22544 &lt;- matrix(unlist(mean_list), ncol = 19, byrow = TRUE) # rejected cos no row and column names; only mean exprs data</span></a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="co"># new_GSE22544 &lt;- data.frame(matrix(unlist(mean_list), ncol = 19, byrow = TRUE)) # rejected cos no column and row names retained and needs extra steps to take the colnames from bound_22544 df</span></a>
-<a class="sourceLine" id="cb8-3" title="3">new_df_GSE22544 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">t</span>(<span class="kw">sapply</span>(mean_list,c))) <span class="co"># has gene symbols as rownames and sample numbers as column names</span></a></code></pre></div>
+<div id="unlisting-of-the-list-transposing-and-converting-into-a-data-frame" class="section level3">
+<h3>(7) Unlisting of the list, transposing and converting into a data frame</h3>
+<p>Taking a look at the structure of the data frame created:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">str</span>(new_df_GSE22544)</a></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    9995 obs. of  20 variables:
+##  $ GSM559616: num  11.13 8.04 6.04 3.1 2.76 ...
+##  $ GSM559617: num  10.82 7.99 7.17 2.96 2.67 ...
+##  $ GSM559618: num  10.66 7.18 5.87 3.05 2.69 ...
+##  $ GSM559619: num  8.61 6.76 6.81 3.02 2.77 ...
+##  $ GSM559620: num  10.92 7.86 6.69 3.03 2.6 ...
+##  $ GSM559621: num  8.79 5.39 4.36 3.37 2.75 ...
+##  $ GSM559622: num  11.03 8.25 6.45 3.32 2.8 ...
+##  $ GSM559623: num  6.63 6.6 7.95 2.86 2.6 ...
+##  $ GSM559624: num  7.47 6.59 8.17 2.97 2.66 ...
+##  $ GSM559625: num  10.95 6.68 7.19 3.39 2.84 ...
+##  $ GSM559626: num  9.54 7.01 6.39 3.57 3.2 ...
+##  $ GSM559627: num  9.63 8.07 6.41 3.26 2.95 ...
+##  $ GSM559628: num  7.74 6.2 6.21 2.92 2.73 ...
+##  $ GSM559629: num  9 6.21 4.93 3.15 2.8 ...
+##  $ GSM559630: num  8.98 4.6 6.13 3.12 2.72 ...
+##  $ GSM559631: num  8.17 5.03 4.57 3.48 3.02 ...
+##  $ GSM559632: num  11.12 7.32 9.42 2.92 2.81 ...
+##  $ GSM559633: num  10.42 5.44 5.88 3.9 2.84 ...
+##  $ GSM559634: num  10.61 6.85 6.61 3.07 2.72 ...
+##  $ GSM559635: num  6.81 4.63 4.91 4.26 3.17 ...</code></pre>
 </div>
-<div id="writing-files" class="section level2">
-<h2>Writing files</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">write.csv</span>(new_df_GSE22544, <span class="dt">file =</span> <span class="st">&quot;D:/Code/RE/My R scripts/new_df_GSE22544.csv&quot;</span>, <span class="dt">row.names =</span> T)</a></code></pre></div>
+<div id="writing-files" class="section level3">
+<h3>Writing files</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">write.csv</span>(new_df_GSE22544, <span class="dt">file =</span> <span class="st">&quot;D:/Code/RE/My R scripts/new_df_GSE22544.csv&quot;</span>, <span class="dt">row.names =</span> T)</a></code></pre></div>
 </div>
     </section>
   </div>
