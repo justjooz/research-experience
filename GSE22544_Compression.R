@@ -52,4 +52,7 @@ mean_list <- lapply(mat_list, mean_fun)
 new_df_GSE22544 <- data.frame(t(sapply(mean_list,c))) # has gene symbols as rownames and sample numbers as column names
 # is.data.frame(new_df_GSE22544) 
 # dim(new_df_GSE22544)
+
+str(new_df_GSE22544)
+
 write.csv(new_df_GSE22544, file = "D:/Code/RE/My R scripts/new_df_GSE22544.csv", row.names = T)
