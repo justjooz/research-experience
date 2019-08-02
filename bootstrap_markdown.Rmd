@@ -254,7 +254,7 @@ jaccard_fun <- function (x,y) {
 ```
 
 Initialising dataframe for imputation:
-```{r, echo=FALSE}
+```{r, eval=FALSE}
 jaccard_df <- as.data.frame(matrix(NA,nrow = 1000, ncol = 1000))
 names(jaccard_df) <- paste0('S', 1:1000)
 rownames(jaccard_df) <- paste0('S', 1:1000)
@@ -262,7 +262,7 @@ rownames(jaccard_df) <- paste0('S', 1:1000)
 ```
 
 `for` loop that will produce the distance matrix:
-```{r echo=FALSE, warning=FALSE, eval=FALSE}
+```{r, eval=FALSE}
 library(progress)
 pb <- progress_bar$new(total = 1000)
 
